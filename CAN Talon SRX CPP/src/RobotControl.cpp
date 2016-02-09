@@ -8,11 +8,6 @@
  *
  */
 class RobotControl : public SampleRobot {
-	CANTalon m_motor;
-
-
-
-  Joystick m_stick;
 
 	// update every 0.01 seconds/10 milliseconds.
   // The talon only receives control packets every 10ms.
@@ -20,9 +15,6 @@ class RobotControl : public SampleRobot {
 	RobotHardware* m_hardware;
 public:
  RobotControl()
-     : m_motor(1),   // Initialize the Talon as device 1. Use the roboRIO web
-                    // interface to change the device number on the talons.
-       m_stick(0)
  {
 	 m_hardware = new RobotHardware();
  }
@@ -38,8 +30,8 @@ public:
 	void OperatorControl() {
 		m_hardware->ReloadIniFile();
 		while (IsOperatorControl() && IsEnabled()) {
-      // Takes a number from -1.0 (full reverse) to +1.0 (full forwards).
-			m_motor.Set(m_stick.GetY());
+			// Takes a number from -1.0 (full reverse) to +1.0 (full forwards).
+			m_hardware->JoystickDrive();
 
 			Wait(kUpdatePeriod); // Wait a bit so that the loop doesn't lock everything up.
 		}
