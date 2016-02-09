@@ -37,7 +37,7 @@ void IniFile::PerformFileLineOperation(char filename[], RobotHardware* hardware,
 		while (std::getline(infile, line))
 		{
 			std::string indexName = "";
-			indexName.resize(13);
+			//indexName.resize(13);
 
 			bool getName = true;
 			std::string val = "";
@@ -46,6 +46,8 @@ void IniFile::PerformFileLineOperation(char filename[], RobotHardware* hardware,
 				if(line[curCh]==':')
 				{
 					getName = false;
+					while(curCh + 1 < line.length() && line[curCh+1] == ' ')
+						++curCh;
 				}
 				else if(getName)
 				{
