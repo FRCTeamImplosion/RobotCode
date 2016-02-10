@@ -1,11 +1,14 @@
 #ifndef ROBOT_HARDWARE_H
 #define ROBOT_HARDWARE_H
 
+#include "Updatable.h"
 #include "WPILib.h"
+class JoystickButtonsManager;
 
-class RobotHardware{
+class RobotHardware : public Updatable{
 public:
 	RobotHardware();
+	~RobotHardware();
 
 	void ReloadIniFile();
 
@@ -30,7 +33,7 @@ public:
 		NUM_STICKS
 	};
 
-	void JoystickDrive();
+	void Update(double delta);
 
 private:
 
@@ -59,14 +62,29 @@ private:
 	int m_buttonConfigs[NUM_BUTTON_USES];
 
 	Joystick* m_sticks[NUM_STICKS];
+	JoystickButtonsManager* m_managers[NUM_STICKS];
 
 	RobotDrive* m_drive;
+
+	char* m_motorSettingsFile;
+	char* m_joystickSettingsFile;
+
+	const double MAX_SHIFT = 1.0;
+	const double MIN_SHIFT = 0;
+	const double SHIFT_STEP = .1;
+	double m_shiftFactor = .5;
+
+	double m_voltage;
 
 	void LoadMotorSettings();
 	void LoadJoystickSettings();
 
 	void SetupMotor(std::string, std::string, void*);
 	void SetupControllerMapping(std::string, std::string, void*);
+
+	void Shift();
+
+	void JoystickDrive();
 };
 
 #endif

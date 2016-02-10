@@ -28,4 +28,21 @@ enum Xbox360Axis
 	XBOX_360_NUM_AXIS,
 };
 
+class Joystick;
+
+class JoystickButtonsManager{
+public:
+	JoystickButtonsManager(Joystick& stick);
+
+	void Update();
+
+	bool IsPressed(int button);
+	bool IsDown(int button);
+	bool IsUp(int button);
+private:
+	Joystick* m_stick;
+	int m_curButtonState;
+	int m_lastButtonState;
+};
+
 #endif
