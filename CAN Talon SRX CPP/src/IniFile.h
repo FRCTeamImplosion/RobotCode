@@ -13,12 +13,16 @@
 class RobotHardware;
 
 class IniFile {
+public:
+	typedef void(RobotHardware::* FileLineOperation)(std::string str, std::string, void* param);
 private:
 	IniFile();
 	virtual ~IniFile();
+
+	static void PerformLineOp(std::string, RobotHardware*, FileLineOperation , void*);
 public:
-	typedef void(RobotHardware::* FileLineOperation)(std::string str, std::string, void* param);
 	static void PerformFileLineOperation(char [], RobotHardware*, FileLineOperation , void* );
+	static void PerformFileLineOperationFake(char [], RobotHardware*, FileLineOperation , void* );
 };
 
 #endif /* SRC_INIFILE_H_ */
