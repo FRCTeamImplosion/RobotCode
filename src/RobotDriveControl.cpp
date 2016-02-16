@@ -3,6 +3,7 @@
 #include "MotorControlHelper.h"
 
 #include <CANTalon.h>
+#include <SmartDashboard/SmartDashboard.h>
 
 
 RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joystick)
@@ -18,7 +19,15 @@ RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joysti
 	settings.GetSetSetting(section, "MaxAccel", m_max_accel, 0.025f);
 	settings.GetSetSetting(section, "MaxDecel", m_max_decel, 0.05f);
 
+	SmartDashboard::PutNumber("ShiftStart", m_initial_shift);
+	SmartDashboard::PutNumber("ShiftMin", m_min_shift);
+	SmartDashboard::PutNumber("ShiftMax", m_max_shift);
+	SmartDashboard::PutNumber("ShiftStep", m_shift_step);
+	SmartDashboard::PutNumber("MaxAccel", m_max_accel);
+	SmartDashboard::PutNumber("MaxDecel", m_max_decel);
+
 	m_shift_factor = m_initial_shift;
+	SmartDashboard::PutNumber("Current Shift", m_shift_factor);
 
 	m_left_speed = 0.0f;
 	m_current_left_speed = 0.0f;
@@ -43,11 +52,22 @@ RobotDriveControl::~RobotDriveControl()
 void RobotDriveControl::Update(double delta)
 {
 	// Handle the shift input
+	bool shift_changed = false;
 	if(m_joystick->IsPressed(XBOX_360_BUTTON_R_BUMPER))
+	{
 		m_shift_factor += m_shift_step;
+		shift_changed = true;
+	}
 	if(m_joystick->IsPressed(XBOX_360_BUTTON_L_BUMPER))
+	{
 		m_shift_factor -= m_shift_step;
-	m_shift_factor = MotorControlHelper::Limit(m_shift_factor, m_min_shift, m_max_shift);
+		shift_changed = true;
+	}
+	if (shift_changed)
+	{
+		m_shift_factor = MotorControlHelper::Limit(m_shift_factor, m_min_shift, m_max_shift);
+		SmartDashboard::PutNumber("Current Shift", m_shift_factor);
+	}
 
 	// Handle the stick inputs
 	m_left_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_LEFT) * m_shift_factor;
