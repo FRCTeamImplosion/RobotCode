@@ -26,15 +26,15 @@ RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joysti
 	m_right_speed = 0.0f;
 	m_current_right_speed = 0.0f;
 
-	m_motors[LEFT_FRONT_MOTOR] = SpeedControllerPtr(new CANTalon(5));
-	m_motors[LEFT_BACK_MOTOR] = SpeedControllerPtr(new CANTalon(6));
-	m_motors[RIGHT_FRONT_MOTOR] = SpeedControllerPtr(new CANTalon(1));
-	m_motors[RIGHT_BACK_MOTOR] = SpeedControllerPtr(new CANTalon(3));
+	m_motors[LEFT_FRONT_MOTOR] = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, section, "LeftFrontMotor"));  // 5
+	m_motors[LEFT_BACK_MOTOR] = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, section, "LeftBackMotor"));  // 6
+	m_motors[RIGHT_FRONT_MOTOR] = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, section, "RightFrontMotor"));  // 1
+	m_motors[RIGHT_BACK_MOTOR] = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, section, "RightBackMotor"));  // 3
 
-	m_motors[LEFT_FRONT_MOTOR]->SetInverted(false);
-	m_motors[LEFT_BACK_MOTOR]->SetInverted(false);
-	m_motors[RIGHT_FRONT_MOTOR]->SetInverted(true);
-	m_motors[RIGHT_BACK_MOTOR]->SetInverted(true);
+	//m_motors[LEFT_FRONT_MOTOR]->SetInverted(false);
+	//m_motors[LEFT_BACK_MOTOR]->SetInverted(false);
+	//m_motors[RIGHT_FRONT_MOTOR]->SetInverted(true);
+	//m_motors[RIGHT_BACK_MOTOR]->SetInverted(true);
 
 	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
 	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);

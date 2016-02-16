@@ -3,10 +3,60 @@
 
 #include <CANTalon.h>
 #include <Talon.h>
+#include <CANJaguar.h>
+#include <Jaguar.h>
+#include <Victor.h>
+#include <VictorSP.h>
+
+SpeedController *MotorControlHelper::ReadSpeedController(SettingsFile &settings, const char *section, const char *motor_key_name)
+{
+	if (!section || !motor_key_name || !settings.HasSection(section))
+		return 0;
+
+	std::string motor_name;
+	if (!settings.GetSetting(section, motor_key_name, motor_name))
+		return 0;
+
+	return ReadSpeedController(settings, motor_name.c_str());
+}
 
 SpeedController *MotorControlHelper::ReadSpeedController(SettingsFile &settings, const char *motor_name)
 {
-	return 0;
+	if (!motor_name || !motor_name[0] || !settings.HasSection(motor_name))
+		return 0;
+
+	int port;
+	bool invert;
+	std::string type;
+	settings.GetSetSetting(motor_name, "Port", port, 0);
+	settings.GetSetSetting(motor_name, "Inverted", invert, false);
+	settings.GetSetSetting(motor_name, "Type", type, "CANTalon");
+
+	std::transform(type.begin(), type.end(), type.begin(), tolower);
+
+	SpeedController *result = 0;
+	if (type == "cantalon")
+		result = new CANTalon(port);
+	if (type == "talon")
+		result = new Talon(port);
+	if (type == "canjaguar")
+		result = new CANJaguar(port);
+	if (type == "jaguar")
+		result = new Jaguar(port);
+	if (type == "victor")
+		result = new Victor(port);
+	if (type == "victorsp")
+		result = new VictorSP(port);
+
+	if (result)
+		result->SetInverted(invert);
+
+	std::string motor = "Motor";
+	std::string name_string = motor + "/" + motor_name;
+	SmartDashboard::PutNumber((name_string + "/Port").c_str(), port);
+	SmartDashboard::PutBoolean((name_string + "/Inverted"), invert);
+	SmartDashboard::PutString((name_string + "/Type"), type.c_str());
+	return result;
 }
 
 float MotorControlHelper::ScaleSpeed(float value, std::map<float, float> &curve_points)

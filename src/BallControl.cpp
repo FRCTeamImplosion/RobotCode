@@ -3,7 +3,6 @@
 #include "SettingsFile.h"
 #include "MotorControlHelper.h"
 #include <SmartDashboard/SmartDashboard.h>
-#include <Talon.h>
 
 
 BallControl::BallControl(SettingsFile &settings, JoystickPtr &joystick)
@@ -20,8 +19,7 @@ BallControl::BallControl(SettingsFile &settings, JoystickPtr &joystick)
 
 	m_speed = 0.0f;
 
-	m_motor = SpeedControllerPtr(new Talon(0));
-	m_motor->SetInverted(false);
+	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "BallMotor"));
 }
 
 BallControl::~BallControl()

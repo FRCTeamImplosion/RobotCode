@@ -4,8 +4,6 @@
 #include "MotorControlHelper.h"
 
 #include <SmartDashboard/SmartDashboard.h>
-#include <CANTalon.h>
-
 
 ArmControl::ArmControl(SettingsFile &settings, JoystickPtr &joystick)
 {
@@ -24,8 +22,7 @@ ArmControl::ArmControl(SettingsFile &settings, JoystickPtr &joystick)
 	m_left->Set(false);
 	m_right->Set(false);
 
-	m_motor = SpeedControllerPtr(new CANTalon(2));	// 2 or 4 is left
-	m_motor->SetInverted(false);
+	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "ArmMotor"));
 }
 
 ArmControl::~ArmControl()

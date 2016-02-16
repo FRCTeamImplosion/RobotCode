@@ -4,23 +4,13 @@
 #include "MotorControlHelper.h"
 
 #include <SmartDashboard/SmartDashboard.h>
-#include <CANTalon.h>
 
 
 WinchControl::WinchControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
-
-	//const char *section = "Winch";
-	//settings.GetSetSetting(section, "ShiftStart", m_initial_shift, 0.65f);
-	//settings.GetSetSetting(section, "ShiftMin", m_min_shift, 0.3f);
-	//settings.GetSetSetting(section, "ShiftMax", m_max_shift, 1.0f);
-	//settings.GetSetSetting(section, "ShiftStep", m_shift_step, 0.35f);
-
 	m_speed = 0.0f;
-
-	m_motor = SpeedControllerPtr(new CANTalon(4));	// 2 or 4
-	m_motor->SetInverted(false);
+	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "WinchMotor"));
 }
 
 WinchControl::~WinchControl()
