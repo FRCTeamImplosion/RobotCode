@@ -1,6 +1,6 @@
 #include "RobotDriveControl.h"
-#include "JoystickReader.h"
 #include "SettingsFile.h"
+#include "MotorControlHelper.h"
 
 #include <CANTalon.h>
 
@@ -15,6 +15,8 @@ RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joysti
 	settings.GetSetSetting(section, "ShiftMin", m_min_shift, 0.3f);
 	settings.GetSetSetting(section, "ShiftMax", m_max_shift, 1.0f);
 	settings.GetSetSetting(section, "ShiftStep", m_shift_step, 0.35f);
+	settings.GetSetSetting(section, "MaxAccel", m_max_accel, 0.025f);
+	settings.GetSetSetting(section, "MaxDecel", m_max_decel, 0.05f);
 
 	m_shift_factor = m_initial_shift;
 
@@ -45,7 +47,7 @@ void RobotDriveControl::Update(double delta)
 		m_shift_factor += m_shift_step;
 	if(m_joystick->IsPressed(XBOX_360_BUTTON_L_BUMPER))
 		m_shift_factor -= m_shift_step;
-	m_shift_factor = Limit(m_shift_factor, m_min_shift, m_max_shift);
+	m_shift_factor = MotorControlHelper::Limit(m_shift_factor, m_min_shift, m_max_shift);
 
 	// Handle the stick inputs
 	m_left_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_LEFT) * m_shift_factor;
@@ -65,43 +67,13 @@ void RobotDriveControl::Stop()
 	SetMotorSpeeds();
 }
 
-
-float RobotDriveControl::Limit(float value) const
-{
-	return Limit(value, -1.0f, 1.0f);
-}
-
-float RobotDriveControl::Limit(float value, float min, float max) const
-{
-	if (value > max)
-		return max;
-	if (value < min)
-		return min;
-	return value;
-}
-
-float RobotDriveControl::ScaleLeftSpeed(float value) const
-{
-	return value;
-}
-
-float RobotDriveControl::ScaleRightSpeed(float value) const
-{
-	return value;
-}
-
-float RobotDriveControl::LimitAcceleration(float cur_value, float requested_value) const
-{
-	return requested_value;
-}
-
 void RobotDriveControl::SetMotorSpeeds()
 {
-	m_current_left_speed = LimitAcceleration(m_current_left_speed, m_left_speed);
-	m_current_right_speed = LimitAcceleration(m_current_right_speed, m_right_speed);
+	m_current_left_speed = MotorControlHelper::Limit(MotorControlHelper::LimitAccelerationDeceleration(m_current_left_speed, m_left_speed, m_max_accel, m_max_decel));
+	m_current_right_speed = MotorControlHelper::Limit(MotorControlHelper::LimitAccelerationDeceleration(m_current_right_speed, m_right_speed, m_max_accel, m_max_decel));
 
-	float left_out = Limit(ScaleLeftSpeed(m_current_left_speed));
-	float right_out = Limit(ScaleRightSpeed(m_current_right_speed));
+	float left_out = MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_left_speed, m_left_speed_curve));
+	float right_out = MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_right_speed, m_right_speed_curve));
 
 	// Set the motor outputs
 	if (m_motors[LEFT_FRONT_MOTOR])

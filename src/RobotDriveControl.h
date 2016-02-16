@@ -7,6 +7,7 @@
 #include <SpeedController.h>
 
 #include <memory>
+#include <map>
 
 class SettingsFile;
 
@@ -36,12 +37,12 @@ private:
 	float ScaleLeftSpeed(float value) const;
 	float ScaleRightSpeed(float value) const;
 	void SetMotorSpeeds();
-	float Limit(float value) const;
-	float Limit(float value, float min, float max) const;
-	float LimitAcceleration(float cur_value, float requested_value) const;
 
 	typedef std::shared_ptr<SpeedController> SpeedControllerPtr;
 	SpeedControllerPtr m_motors[NUM_DRIVE_MOTORS];
+
+	float m_max_accel;
+	float m_max_decel;
 
 	float m_initial_shift;
 	float m_max_shift;
@@ -56,6 +57,9 @@ private:
 	float m_current_left_speed;
 	float m_right_speed;
 	float m_current_right_speed;
+
+	std::map<float, float> 	m_left_speed_curve;
+	std::map<float, float>  m_right_speed_curve;
 };
 
 #endif
