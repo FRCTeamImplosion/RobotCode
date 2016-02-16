@@ -1,5 +1,5 @@
-#ifndef WINCHCONTROL_H
-#define WINCHCONTROL_H
+#ifndef BALLCONTROL_H
+#define BALLCONTROL_H
 
 #include "Updatable.h"
 #include "JoystickReader.h"
@@ -10,13 +10,13 @@
 
 class SettingsFile;
 
-class WinchControl : public Updatable
+class BallControl : public Updatable
 {
 public:
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 
-	explicit WinchControl(SettingsFile &settings, JoystickPtr &joystick);
-	~WinchControl();
+	explicit BallControl(SettingsFile &settings, JoystickPtr &joystick);
+	~BallControl();
 
 	virtual void Update(double delta);
 	virtual void Stop();
@@ -26,8 +26,10 @@ private:
 
 	typedef std::shared_ptr<SpeedController> SpeedControllerPtr;
 	SpeedControllerPtr m_motor;
-
 	JoystickPtr m_joystick;
+
+	float m_max_in_speed;
+	float m_max_out_speed;
 	float m_speed;
 };
 

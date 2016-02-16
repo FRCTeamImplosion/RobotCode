@@ -5,6 +5,7 @@
 #include "JoystickReader.h"
 
 #include <SpeedController.h>
+#include <Solenoid.h>
 
 #include <memory>
 
@@ -22,14 +23,18 @@ public:
 	virtual void Stop();
 
 private:
-	float Limit(float value) const;
-	float Limit(float value, float min, float max) const;
-	float LimitAcceleration(float cur_value, float requested_value) const;
 	void SetMotorSpeed();
 
 	typedef std::shared_ptr<SpeedController> SpeedControllerPtr;
+	typedef std::shared_ptr<Solenoid> SolenoidPtr;
 	SpeedControllerPtr m_motor;
 	JoystickPtr m_joystick;
+
+	SolenoidPtr m_left;
+	SolenoidPtr m_right;
+
+	float m_max_down_acceleration;
+	float m_max_down_speed;
 	float m_current_speed;
 	float m_speed;
 };

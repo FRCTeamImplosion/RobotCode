@@ -24,7 +24,7 @@ private:
 	enum Joysticks
 	{
 		DRIVE_STICK,
-		AUXILLARY_STICK,
+		ARM_STICK,
 		NUM_JOYSTICKS
 	};
 

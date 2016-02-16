@@ -1,6 +1,10 @@
 #include "RobotControl.h"
 #include "RobotDriveControl.h"
+#include "ArmControl.h"
+#include "BallControl.h"
+#include "WinchControl.h"
 
+#include <DriverStation.h>
 #include <RobotBase.h>
 #include <Timer.h>
 
@@ -15,6 +19,11 @@ RobotControl::~RobotControl()
 void RobotControl::RobotInit()
 {
 	m_updatables.clear();
+	for (int cur_stick = 0; cur_stick < NUM_JOYSTICKS; ++cur_stick)
+	{
+		m_joysticks[cur_stick] = 0;
+	}
+
 
 	const char *settings_file_name = "/home/lvuser/RobotSettings.ini";
 
@@ -27,27 +36,33 @@ void RobotControl::RobotInit()
 	}
 
 	m_updatables.push_back(UpdatablePtr(new RobotDriveControl(m_settings, m_joysticks[DRIVE_STICK])));
+	m_updatables.push_back(UpdatablePtr(new ArmControl(m_settings, m_joysticks[ARM_STICK])));
+	m_updatables.push_back(UpdatablePtr(new WinchControl(m_settings, m_joysticks[ARM_STICK])));
+	m_updatables.push_back(UpdatablePtr(new BallControl(m_settings, m_joysticks[ARM_STICK])));
 
 	m_settings.SaveSettingsFile(settings_file_name);
+
+	DriverStation::ReportWarning("RobotInit called");
 }
 
 void RobotControl::Disabled()
 {
+	DriverStation::ReportWarning("Disabled called");
 	for (UpdatablePtr ptr : m_updatables)
 	{
 		ptr->Stop();
 	}
-
-	RobotInit();	// Reinitialize settings
 }
 
 void RobotControl::Autonomous()
 {
+	DriverStation::ReportWarning("Autonomous called");
 	StopAll();
 }
 
 void RobotControl::OperatorControl()
 {
+	DriverStation::ReportWarning("OperatorControl called");
 	while (IsOperatorControl() && IsEnabled())
 	{
 		UpdateAll();

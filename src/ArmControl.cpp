@@ -1,7 +1,9 @@
 #include "ArmControl.h"
 #include "JoystickReader.h"
 #include "SettingsFile.h"
+#include "MotorControlHelper.h"
 
+#include <SmartDashboard/SmartDashboard.h>
 #include <CANTalon.h>
 
 
@@ -11,13 +13,16 @@ ArmControl::ArmControl(SettingsFile &settings, JoystickPtr &joystick)
 
 	const char *section = "Arm";
 
-	//settings.GetSetSetting(section, "ShiftStart", m_initial_shift, 0.65f);
-	//settings.GetSetSetting(section, "ShiftMin", m_min_shift, 0.3f);
-	//settings.GetSetSetting(section, "ShiftMax", m_max_shift, 1.0f);
-	//settings.GetSetSetting(section, "ShiftStep", m_shift_step, 0.35f);
+	settings.GetSetSetting(section, "MaxDownAccel", m_max_down_acceleration, 0.015f);
+	settings.GetSetSetting(section, "MaxDownSpeed", m_max_down_speed, 0.25f);
 
 	m_speed = 0.0f;
 	m_current_speed = 0.0f;
+
+	m_left = SolenoidPtr(new Solenoid(1));
+	m_right = SolenoidPtr(new Solenoid(2));
+	m_left->Set(false);
+	m_right->Set(false);
 
 	m_motor = SpeedControllerPtr(new CANTalon(2));	// 2 or 4 is left
 	m_motor->SetInverted(false);
@@ -30,10 +35,31 @@ ArmControl::~ArmControl()
 void ArmControl::Update(double delta)
 {
 	// Handle the stick inputs
-	m_speed = m_joystick->GetAxis(XBOX_360_LEFT_TRIGGER) - m_joystick->GetAxis(XBOX_360_RIGHT_TRIGGER);
+	float left_trigger = m_joystick->GetAxis(XBOX_360_LEFT_TRIGGER);
+	float right_trigger = m_joystick->GetAxis(XBOX_360_RIGHT_TRIGGER);
+	SmartDashboard::PutNumber("Arm/LeftTrigger", left_trigger);
+	SmartDashboard::PutNumber("Arm/RightTrigger", right_trigger);
+
+	m_speed = left_trigger - right_trigger;
 
 	// Set the output
 	SetMotorSpeed();
+
+	// Handle the buttons for the solenoids
+	m_left = SolenoidPtr(new Solenoid(1));
+	m_right = SolenoidPtr(new Solenoid(2));
+
+	m_speed = 0.0f;
+	if (m_joystick->IsDown(XBOX_360_BUTTON_BACK))
+	{
+		m_left->Set(true);
+		m_right->Set(true);
+	}
+	else
+	{
+		m_left->Set(false);
+		m_right->Set(false);
+	}
 }
 
 void ArmControl::Stop()
@@ -43,31 +69,15 @@ void ArmControl::Stop()
 	SetMotorSpeed();
 }
 
-
-float ArmControl::Limit(float value) const
-{
-	return Limit(value, -1.0f, 1.0f);
-}
-
-float ArmControl::Limit(float value, float min, float max) const
-{
-	if (value > max)
-		return max;
-	if (value < min)
-		return min;
-	return value;
-}
-
-float ArmControl::LimitAcceleration(float cur_value, float requested_value) const
-{
-	return requested_value;
-}
-
 void ArmControl::SetMotorSpeed()
 {
-	m_current_speed = LimitAcceleration(m_current_speed, m_speed);
+	m_current_speed = MotorControlHelper::LimitReverseAcceleration(m_current_speed, m_speed, m_max_down_acceleration);
 
-	float out = Limit(m_current_speed);
+	float out = MotorControlHelper::Limit(m_current_speed, -m_max_down_speed, 1.0f);
+
+	SmartDashboard::PutNumber("Arm/Speed", m_speed);
+	SmartDashboard::PutNumber("Arm/Current", m_current_speed);
+	SmartDashboard::PutNumber("Arm/Out", out);
 
 	// Set the motor outputs
 	if (m_motor)

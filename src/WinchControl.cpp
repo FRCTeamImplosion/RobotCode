@@ -1,7 +1,9 @@
 #include "WinchControl.h"
 #include "JoystickReader.h"
 #include "SettingsFile.h"
+#include "MotorControlHelper.h"
 
+#include <SmartDashboard/SmartDashboard.h>
 #include <CANTalon.h>
 
 
@@ -9,8 +11,7 @@ WinchControl::WinchControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 
-	const char *section = "Winch";
-
+	//const char *section = "Winch";
 	//settings.GetSetSetting(section, "ShiftStart", m_initial_shift, 0.65f);
 	//settings.GetSetSetting(section, "ShiftMin", m_min_shift, 0.3f);
 	//settings.GetSetSetting(section, "ShiftMax", m_max_shift, 1.0f);
@@ -29,7 +30,11 @@ WinchControl::~WinchControl()
 void WinchControl::Update(double delta)
 {
 	// Handle the stick inputs
-	m_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_LEFT);
+	m_speed = 0.0f;
+	if (m_joystick->IsDown(XBOX_360_BUTTON_BACK))
+		m_speed = -1.0f;
+	if (m_joystick->IsDown(XBOX_360_BUTTON_START))
+		m_speed = 1.0f;
 
 	// Set the output
 	SetMotorSpeed();
@@ -41,25 +46,11 @@ void WinchControl::Stop()
 	SetMotorSpeed();
 }
 
-
-float WinchControl::Limit(float value) const
-{
-	return Limit(value, -1.0f, 1.0f);
-}
-
-float WinchControl::Limit(float value, float min, float max) const
-{
-	if (value > max)
-		return max;
-	if (value < min)
-		return min;
-	return value;
-}
-
-
 void WinchControl::SetMotorSpeed()
 {
-	float out = Limit(m_speed);
+	SmartDashboard::PutNumber("Winch/Speed", m_speed);
+
+	float out = MotorControlHelper::Limit(m_speed);
 
 	// Set the motor outputs
 	if (m_motor)

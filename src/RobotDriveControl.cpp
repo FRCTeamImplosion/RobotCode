@@ -19,15 +19,7 @@ RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joysti
 	settings.GetSetSetting(section, "MaxAccel", m_max_accel, 0.025f);
 	settings.GetSetSetting(section, "MaxDecel", m_max_decel, 0.05f);
 
-	SmartDashboard::PutNumber("ShiftStart", m_initial_shift);
-	SmartDashboard::PutNumber("ShiftMin", m_min_shift);
-	SmartDashboard::PutNumber("ShiftMax", m_max_shift);
-	SmartDashboard::PutNumber("ShiftStep", m_shift_step);
-	SmartDashboard::PutNumber("MaxAccel", m_max_accel);
-	SmartDashboard::PutNumber("MaxDecel", m_max_decel);
-
 	m_shift_factor = m_initial_shift;
-	SmartDashboard::PutNumber("Current Shift", m_shift_factor);
 
 	m_left_speed = 0.0f;
 	m_current_left_speed = 0.0f;
@@ -43,6 +35,14 @@ RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joysti
 	m_motors[LEFT_BACK_MOTOR]->SetInverted(false);
 	m_motors[RIGHT_FRONT_MOTOR]->SetInverted(true);
 	m_motors[RIGHT_BACK_MOTOR]->SetInverted(true);
+
+	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
+	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);
+	SmartDashboard::PutNumber("Drive/Shift/Max", m_max_shift);
+	SmartDashboard::PutNumber("Drive/Shift/Step", m_shift_step);
+	SmartDashboard::PutNumber("Drive/Shift/Current", m_shift_factor);
+	SmartDashboard::PutNumber("Drive/MaxAccel", m_max_accel);
+	SmartDashboard::PutNumber("Drive/MaxDecel", m_max_decel);
 }
 
 RobotDriveControl::~RobotDriveControl()
@@ -66,7 +66,7 @@ void RobotDriveControl::Update(double delta)
 	if (shift_changed)
 	{
 		m_shift_factor = MotorControlHelper::Limit(m_shift_factor, m_min_shift, m_max_shift);
-		SmartDashboard::PutNumber("Current Shift", m_shift_factor);
+		SmartDashboard::PutNumber("Drive/Shift/Current", m_shift_factor);
 	}
 
 	// Handle the stick inputs
@@ -94,6 +94,13 @@ void RobotDriveControl::SetMotorSpeeds()
 
 	float left_out = MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_left_speed, m_left_speed_curve));
 	float right_out = MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_right_speed, m_right_speed_curve));
+
+	SmartDashboard::PutNumber("Drive/Speed/Left/Speed", m_left_speed);
+	SmartDashboard::PutNumber("Drive/Speed/Left/Current", m_current_left_speed);
+	SmartDashboard::PutNumber("Drive/Speed/Left/Output Speed", left_out);
+	SmartDashboard::PutNumber("Drive/Speed/Right/Speed", m_right_speed);
+	SmartDashboard::PutNumber("Drive/Speed/Right/Current", m_current_right_speed);
+	SmartDashboard::PutNumber("Drive/Speed/Right/Output Speed", right_out);
 
 	// Set the motor outputs
 	if (m_motors[LEFT_FRONT_MOTOR])
