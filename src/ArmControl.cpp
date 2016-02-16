@@ -23,6 +23,9 @@ ArmControl::ArmControl(SettingsFile &settings, JoystickPtr &joystick)
 	m_right->Set(false);
 
 	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "ArmMotor"));
+
+	SmartDashboard::PutNumber("Arm/MaxDownAccel", m_max_down_acceleration);
+	SmartDashboard::PutNumber("Arm/MaxDownSpeed", m_max_down_speed);
 }
 
 ArmControl::~ArmControl()
