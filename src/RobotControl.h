@@ -3,10 +3,9 @@
 
 #include "Updatable.h"
 #include "JoystickReader.h"
+#include "SettingsFile.h"
 
 #include <SampleRobot.h>
-
-
 #include <memory>
 
 class RobotControl : public SampleRobot
@@ -20,7 +19,6 @@ public:
 	virtual void OperatorControl();
 private:
 	void StopAll();
-	void EnableAll();
 	void UpdateAll();
 
 	enum Joysticks
@@ -38,6 +36,8 @@ private:
 
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 	JoystickPtr m_joysticks[NUM_JOYSTICKS];
+
+	SettingsFile m_settings;
 };
 
 #endif

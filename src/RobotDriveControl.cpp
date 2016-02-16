@@ -1,14 +1,22 @@
 #include "RobotDriveControl.h"
 #include "JoystickReader.h"
+#include "SettingsFile.h"
 
 #include <CANTalon.h>
 
 
-RobotDriveControl::RobotDriveControl(JoystickPtr &joystick)
+RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 
-	m_shift_factor = MIN_SHIFT + SHIFT_STEP;
+	const char *section = "RobotDrive";
+
+	settings.GetSetSetting(section, "ShiftStart", m_initial_shift, 0.65f);
+	settings.GetSetSetting(section, "ShiftMin", m_min_shift, 0.3f);
+	settings.GetSetSetting(section, "ShiftMax", m_max_shift, 1.0f);
+	settings.GetSetSetting(section, "ShiftStep", m_shift_step, 0.35f);
+
+	m_shift_factor = m_initial_shift;
 
 	m_left_speed = 0.0f;
 	m_current_left_speed = 0.0f;
@@ -34,10 +42,10 @@ void RobotDriveControl::Update(double delta)
 {
 	// Handle the shift input
 	if(m_joystick->IsPressed(XBOX_360_BUTTON_R_BUMPER))
-		m_shift_factor += SHIFT_STEP;
+		m_shift_factor += m_shift_step;
 	if(m_joystick->IsPressed(XBOX_360_BUTTON_L_BUMPER))
-		m_shift_factor -= SHIFT_STEP;
-	m_shift_factor = Limit(m_shift_factor, MIN_SHIFT, MAX_SHIFT);
+		m_shift_factor -= m_shift_step;
+	m_shift_factor = Limit(m_shift_factor, m_min_shift, m_max_shift);
 
 	// Handle the stick inputs
 	m_left_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_LEFT) * m_shift_factor;
@@ -47,23 +55,13 @@ void RobotDriveControl::Update(double delta)
 	SetMotorSpeeds();
 }
 
-void RobotDriveControl::Disable()
-{
-	Stop();
-}
-
-void RobotDriveControl::Enable()
-{
-	Stop();
-	m_shift_factor = INITIAL_SHIFT;
-}
-
 void RobotDriveControl::Stop()
 {
 	m_left_speed = 0.0f;
 	m_right_speed = 0.0f;
 	m_current_left_speed = 0.0f;
 	m_current_right_speed = 0.0f;
+	m_shift_factor = m_initial_shift;
 	SetMotorSpeeds();
 }
 
