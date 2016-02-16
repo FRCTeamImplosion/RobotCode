@@ -18,19 +18,7 @@ void RobotControl::RobotInit()
 
 	const char *settings_file_name = "/home/lvuser/RobotSettings.ini";
 
-	m_settings.ParseSettingsString(
-			"[RobotDrive]\n"
-			"LeftFrontMotor = LeftFrontMotor\n"
-			"LeftBackMotor = LeftBackMotor\n"
-			"RightFrontMotor = RightFrontMotor\n"
-			"RightBackMotor = RightBackMotor\n"
-			"LeftScale=-1:-1, 0:0, 1:1\n"
-			"ShiftStart=0.65\n"
-			"ShiftMin=0.3\n"
-			"ShiftMax=1.0\n"
-			"ShiftStep=0.35\n"
-			"\n"
-			);
+	m_settings.ParseSettingsFile(settings_file_name);
 
 	for (int cur_stick = 0; cur_stick < NUM_JOYSTICKS; ++cur_stick)
 	{
