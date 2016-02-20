@@ -40,7 +40,7 @@ void RobotControl::RobotInit()
 	m_updatables.push_back(UpdatablePtr(new WinchControl(m_settings, m_joysticks[ARM_STICK])));
 	m_updatables.push_back(UpdatablePtr(new BallControl(m_settings, m_joysticks[ARM_STICK])));
 
-	m_settings.SaveSettingsFile(settings_file_name);
+	//m_settings.SaveSettingsFile(settings_file_name);
 
 	DriverStation::ReportWarning("RobotInit called");
 }

@@ -46,19 +46,20 @@ void ArmControl::Update(double delta)
 	SetMotorSpeed();
 
 	// Handle the buttons for the solenoids
-	m_left = SolenoidPtr(new Solenoid(1));
-	m_right = SolenoidPtr(new Solenoid(2));
-
 	m_speed = 0.0f;
 	if (m_joystick->IsDown(XBOX_360_BUTTON_BACK))
 	{
-		m_left->Set(true);
-		m_right->Set(true);
+		if (m_left)
+			m_left->Set(true);
+		if (m_right)
+			m_right->Set(true);
 	}
 	else
 	{
-		m_left->Set(false);
-		m_right->Set(false);
+		if (m_left)
+			m_left->Set(false);
+		if (m_right)
+			m_right->Set(false);
 	}
 }
 
