@@ -15,7 +15,8 @@ class WinchControl : public Updatable
 public:
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 
-	explicit WinchControl(SettingsFile &settings, JoystickPtr &joystick);
+	//WinchControl(SettingsFile &settings, JoystickPtr &joystick);
+	explicit WinchControl(JoystickPtr &joystick);
 	~WinchControl();
 
 	virtual void Update(double delta);

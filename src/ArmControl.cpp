@@ -5,6 +5,7 @@
 
 #include <SmartDashboard/SmartDashboard.h>
 
+/*
 ArmControl::ArmControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
@@ -23,6 +24,29 @@ ArmControl::ArmControl(SettingsFile &settings, JoystickPtr &joystick)
 	m_right->Set(false);
 
 	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "ArmMotor"));
+
+	SmartDashboard::PutNumber("Arm/MaxDownAccel", m_max_down_acceleration);
+	SmartDashboard::PutNumber("Arm/MaxDownSpeed", m_max_down_speed);
+}
+*/
+
+
+ArmControl::ArmControl(JoystickPtr &joystick)
+{
+	m_joystick = joystick;
+
+	m_max_down_acceleration = 0.015f;
+	m_max_down_speed =  0.25f;
+
+	m_speed = 0.0f;
+	m_current_speed = 0.0f;
+
+	m_left = SolenoidPtr(new Solenoid(1));
+	m_right = SolenoidPtr(new Solenoid(2));
+	m_left->Set(false);
+	m_right->Set(false);
+
+	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "ArmMotor", 2, false));
 
 	SmartDashboard::PutNumber("Arm/MaxDownAccel", m_max_down_acceleration);
 	SmartDashboard::PutNumber("Arm/MaxDownSpeed", m_max_down_speed);

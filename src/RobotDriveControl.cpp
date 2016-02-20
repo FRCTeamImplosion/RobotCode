@@ -6,6 +6,7 @@
 #include <SmartDashboard/SmartDashboard.h>
 
 
+/*
 RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
@@ -35,6 +36,39 @@ RobotDriveControl::RobotDriveControl(SettingsFile &settings, JoystickPtr &joysti
 	//m_motors[LEFT_BACK_MOTOR]->SetInverted(false);
 	//m_motors[RIGHT_FRONT_MOTOR]->SetInverted(true);
 	//m_motors[RIGHT_BACK_MOTOR]->SetInverted(true);
+
+	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
+	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);
+	SmartDashboard::PutNumber("Drive/Shift/Max", m_max_shift);
+	SmartDashboard::PutNumber("Drive/Shift/Step", m_shift_step);
+	SmartDashboard::PutNumber("Drive/Shift/Current", m_shift_factor);
+	SmartDashboard::PutNumber("Drive/MaxAccel", m_max_accel);
+	SmartDashboard::PutNumber("Drive/MaxDecel", m_max_decel);
+}
+*/
+
+RobotDriveControl::RobotDriveControl(JoystickPtr &joystick)
+{
+	m_joystick = joystick;
+
+	m_min_shift = 0.25f;
+	m_max_shift = 0.8f;
+	m_max_accel = 0.025f;
+	m_max_decel = 0.05f;
+	m_initial_shift = (m_max_shift - m_min_shift)/2.0f;
+	m_shift_step = m_initial_shift;
+
+	m_shift_factor = m_min_shift + m_shift_step;
+
+	m_left_speed = 0.0f;
+	m_current_left_speed = 0.0f;
+	m_right_speed = 0.0f;
+	m_current_right_speed = 0.0f;
+
+	m_motors[LEFT_FRONT_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "LeftFrontMotor", 5, true));  // 5
+	m_motors[LEFT_BACK_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "LeftBackMotor", 6, true));  // 6
+	m_motors[RIGHT_FRONT_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "RightFrontMotor", 1, false));  // 1
+	m_motors[RIGHT_BACK_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "RightBackMotor", 1, false));  // 3
 
 	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
 	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);

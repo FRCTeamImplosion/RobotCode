@@ -11,6 +11,7 @@ class MotorControlHelper
 public:
 	static SpeedController *ReadSpeedController(SettingsFile &settings, const char *motor_name);
 	static SpeedController *ReadSpeedController(SettingsFile &settings, const char *section, const char *motor_key_name);
+	static SpeedController *CreateSpeedController(const char *type, const char *motor_name, int port, bool invert);
 
 	static float ScaleSpeed(float value, std::map<float, float> &curve_points);
 	static float Limit(float value);

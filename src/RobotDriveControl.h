@@ -16,7 +16,8 @@ class RobotDriveControl : public Updatable
 public:
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 
-	explicit RobotDriveControl(SettingsFile &settings, JoystickPtr &joystick);
+	//RobotDriveControl(SettingsFile &settings, JoystickPtr &joystick);
+	explicit RobotDriveControl(JoystickPtr &joystick);
 	~RobotDriveControl();
 
 	virtual void Update(double delta);

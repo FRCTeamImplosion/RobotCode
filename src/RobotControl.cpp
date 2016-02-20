@@ -25,9 +25,9 @@ void RobotControl::RobotInit()
 	}
 
 
-	const char *settings_file_name = "/home/lvuser/RobotSettings.ini";
+	//const char *settings_file_name = "/home/lvuser/RobotSettings.ini";
 
-	m_settings.ParseSettingsFile(settings_file_name);
+	//m_settings.ParseSettingsFile(settings_file_name);
 
 	for (int cur_stick = 0; cur_stick < NUM_JOYSTICKS; ++cur_stick)
 	{
@@ -35,10 +35,10 @@ void RobotControl::RobotInit()
 		m_updatables.push_back(m_joysticks[cur_stick]);
 	}
 
-	m_updatables.push_back(UpdatablePtr(new RobotDriveControl(m_settings, m_joysticks[DRIVE_STICK])));
-	m_updatables.push_back(UpdatablePtr(new ArmControl(m_settings, m_joysticks[ARM_STICK])));
-	m_updatables.push_back(UpdatablePtr(new WinchControl(m_settings, m_joysticks[ARM_STICK])));
-	m_updatables.push_back(UpdatablePtr(new BallControl(m_settings, m_joysticks[ARM_STICK])));
+	m_updatables.push_back(UpdatablePtr(new RobotDriveControl( m_joysticks[DRIVE_STICK])));
+	m_updatables.push_back(UpdatablePtr(new ArmControl( m_joysticks[ARM_STICK])));
+	m_updatables.push_back(UpdatablePtr(new WinchControl( m_joysticks[ARM_STICK])));
+	m_updatables.push_back(UpdatablePtr(new BallControl( m_joysticks[ARM_STICK])));
 
 	//m_settings.SaveSettingsFile(settings_file_name);
 

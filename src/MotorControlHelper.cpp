@@ -32,6 +32,12 @@ SpeedController *MotorControlHelper::ReadSpeedController(SettingsFile &settings,
 	settings.GetSetSetting(motor_name, "Inverted", invert, false);
 	settings.GetSetSetting(motor_name, "Type", type, "CANTalon");
 
+	return CreateSpeedController(type.c_str(), motor_name, port, invert);
+}
+
+SpeedController *MotorControlHelper::CreateSpeedController(const char *t, const char *motor_name, int port, bool invert)
+{
+	std::string type = t;
 	std::transform(type.begin(), type.end(), type.begin(), tolower);
 
 	SpeedController *result = 0;

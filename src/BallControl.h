@@ -15,7 +15,8 @@ class BallControl : public Updatable
 public:
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 
-	explicit BallControl(SettingsFile &settings, JoystickPtr &joystick);
+	//explicit BallControl(SettingsFile &settings, JoystickPtr &joystick);
+	explicit BallControl(JoystickPtr &joystick);
 	~BallControl();
 
 	virtual void Update(double delta);

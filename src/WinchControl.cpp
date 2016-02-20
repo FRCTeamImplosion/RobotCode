@@ -6,11 +6,20 @@
 #include <SmartDashboard/SmartDashboard.h>
 
 
+/*
 WinchControl::WinchControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 	m_speed = 0.0f;
 	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "WinchMotor"));
+}
+*/
+
+WinchControl::WinchControl(JoystickPtr &joystick)
+{
+	m_joystick = joystick;
+	m_speed = 0.0f;
+	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "WinchMotor", 4, false));
 }
 
 WinchControl::~WinchControl()

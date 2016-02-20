@@ -4,7 +4,7 @@
 #include "MotorControlHelper.h"
 #include <SmartDashboard/SmartDashboard.h>
 
-
+/*
 BallControl::BallControl(SettingsFile &settings, JoystickPtr &joystick)
 {
 	m_joystick = joystick;
@@ -21,6 +21,25 @@ BallControl::BallControl(SettingsFile &settings, JoystickPtr &joystick)
 
 	m_motor = SpeedControllerPtr(MotorControlHelper::ReadSpeedController(settings, "BallMotor"));
 }
+*/
+
+BallControl::BallControl(JoystickPtr &joystick)
+{
+	m_joystick = joystick;
+
+	const char *section = "Ball";
+
+	m_max_in_speed =  0.4f;
+	m_max_out_speed =  0.75f;
+
+	SmartDashboard::PutNumber("Ball/MaxInSpeed", m_max_in_speed);
+	SmartDashboard::PutNumber("Ball/MaxOutSpeed", m_max_out_speed);
+
+	m_speed = 0.0f;
+
+	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("Talon", "BallMotor", 1, false));
+}
+
 
 BallControl::~BallControl()
 {

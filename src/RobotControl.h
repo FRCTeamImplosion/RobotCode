@@ -37,7 +37,7 @@ private:
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 	JoystickPtr m_joysticks[NUM_JOYSTICKS];
 
-	SettingsFile m_settings;
+	//SettingsFile m_settings;
 };
 
 #endif

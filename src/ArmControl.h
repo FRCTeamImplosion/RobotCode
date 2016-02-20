@@ -16,7 +16,8 @@ class ArmControl : public Updatable
 public:
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 
-	explicit ArmControl(SettingsFile &settings, JoystickPtr &joystick);
+	//explicit ArmControl(SettingsFile &settings, JoystickPtr &joystick);
+	explicit ArmControl(JoystickPtr &joystick);
 	~ArmControl();
 
 	virtual void Update(double delta);
