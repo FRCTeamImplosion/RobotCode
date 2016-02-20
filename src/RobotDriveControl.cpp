@@ -70,6 +70,11 @@ RobotDriveControl::RobotDriveControl(JoystickPtr &joystick)
 	m_motors[RIGHT_FRONT_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "RightFrontMotor", 1, false));  // 1
 	m_motors[RIGHT_BACK_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "RightBackMotor", 1, false));  // 3
 
+	m_left_speed_curve[1.0f] = 1.0f;
+	m_right_speed_curve[1.0f] = 1.0f;
+	m_left_speed_curve[-1.0f] = 1.0f;
+	m_right_speed_curve[-1.0f] = 1.0f;
+
 	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
 	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);
 	SmartDashboard::PutNumber("Drive/Shift/Max", m_max_shift);
@@ -103,13 +108,51 @@ void RobotDriveControl::Update(double delta)
 		SmartDashboard::PutNumber("Drive/Shift/Current", m_shift_factor);
 	}
 
-	int pov = m_joystick->GetPOV();
-	SmartDashboard::PutNumber("Drive/POV", pov);
-
-
 	// Handle the stick inputs
 	m_left_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_LEFT) * m_shift_factor;
 	m_right_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_RIGHT) * m_shift_factor;
+
+	int pov = m_joystick->GetPOV();
+	SmartDashboard::PutNumber("Drive/POV", pov);
+	if (pov >= 0)
+	{
+		switch (pov)
+		{
+		case 0:
+			m_left_speed = m_right_speed = 1.0f;
+			break;
+		case 45:
+			m_left_speed = -1.0f;
+			m_right_speed = 0.0f;
+			break;
+		case 90:
+			m_left_speed = -1.0f;
+			m_right_speed = 1.0f;
+			break;
+		case 135:
+			m_left_speed = 0.0f;
+			m_right_speed = 1.0f;
+			break;
+		case 180:
+			m_left_speed = 1.0f;
+			m_right_speed = 1.0f;
+			break;
+		case 225:
+			m_left_speed = 1.0f;
+			m_right_speed = 0.0f;
+			break;
+		case 270:
+			m_left_speed = 1.0f;
+			m_right_speed = -1.0f;
+			break;
+		case 315:
+			m_left_speed = 0.0f;
+			m_right_speed = -1.0f;
+			break;
+		}
+	}
+
+
 
 	// Set the output
 	SetMotorSpeeds();
@@ -130,8 +173,8 @@ void RobotDriveControl::SetMotorSpeeds()
 	m_current_left_speed = MotorControlHelper::Limit(MotorControlHelper::LimitAccelerationDeceleration(m_current_left_speed, m_left_speed, m_max_accel, m_max_decel));
 	m_current_right_speed = MotorControlHelper::Limit(MotorControlHelper::LimitAccelerationDeceleration(m_current_right_speed, m_right_speed, m_max_accel, m_max_decel));
 
-	float left_out = MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_left_speed, m_left_speed_curve));
-	float right_out = MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_right_speed, m_right_speed_curve));
+	float left_out = m_current_left_speed;//MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_left_speed, m_left_speed_curve));
+	float right_out = m_current_right_speed;//MotorControlHelper::Limit(MotorControlHelper::ScaleSpeed(m_current_right_speed, m_right_speed_curve));
 
 	SmartDashboard::PutNumber("Drive/Speed/Left/Speed", m_left_speed);
 	SmartDashboard::PutNumber("Drive/Speed/Left/Current", m_current_left_speed);

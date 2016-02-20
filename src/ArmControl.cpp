@@ -96,7 +96,7 @@ void ArmControl::Stop()
 
 void ArmControl::SetMotorSpeed()
 {
-	m_current_speed = MotorControlHelper::LimitReverseAcceleration(m_current_speed, m_speed, m_max_down_acceleration);
+	//m_current_speed = MotorControlHelper::LimitReverseAcceleration(m_current_speed, m_speed, m_max_down_acceleration);
 
 	float out = MotorControlHelper::Limit(m_current_speed, -m_max_down_speed, 1.0f);
 

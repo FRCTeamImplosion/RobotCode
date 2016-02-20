@@ -67,7 +67,28 @@ SpeedController *MotorControlHelper::CreateSpeedController(const char *t, const 
 
 float MotorControlHelper::ScaleSpeed(float value, std::map<float, float> &curve_points)
 {
-	return value;
+	std::map<float, float>::iterator pos = curve_points.lower_bound(value);
+	if (pos == curve_points.end())
+		return value;
+
+	// Find the two points in the map surrounding value
+	float lower_pos = pos->first;
+	float lower_scale = pos->second;
+
+	pos++;
+	if (pos == curve_points.end())
+		return lower_scale * value;
+
+	float upper_pos = pos->first;
+	float upper_scale = pos->second;
+	if (upper_pos <= lower_pos)
+		return lower_scale * value;
+
+	float delta_pos = upper_pos - lower_pos;
+	float delta_scale = upper_scale - lower_scale;
+	float t = (value - lower_pos)/delta_pos;
+	float scale = lower_scale + t * delta_scale;
+	return value * scale;
 }
 
 float MotorControlHelper::Limit(float value)
