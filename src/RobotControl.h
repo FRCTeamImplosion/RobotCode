@@ -6,6 +6,7 @@
 #include "SettingsFile.h"
 
 #include <SampleRobot.h>
+#include <Compressor.h>
 #include <memory>
 
 class RobotControl : public SampleRobot
@@ -36,6 +37,9 @@ private:
 
 	typedef std::shared_ptr<JoystickReader> JoystickPtr;
 	JoystickPtr m_joysticks[NUM_JOYSTICKS];
+
+	typedef std::shared_ptr<Compressor> CompressorPtr;
+	CompressorPtr m_compressor;
 
 	//SettingsFile m_settings;
 };

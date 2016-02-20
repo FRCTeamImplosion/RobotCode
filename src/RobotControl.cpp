@@ -24,6 +24,8 @@ void RobotControl::RobotInit()
 		m_joysticks[cur_stick] = 0;
 	}
 
+	m_compressor = CompressorPtr(new Compressor());
+	m_compressor->Start();
 
 	//const char *settings_file_name = "/home/lvuser/RobotSettings.ini";
 
@@ -52,16 +54,19 @@ void RobotControl::Disabled()
 	{
 		ptr->Stop();
 	}
+	m_compressor->Stop();
 }
 
 void RobotControl::Autonomous()
 {
+	m_compressor->Start();
 	DriverStation::ReportWarning("Autonomous called");
 	StopAll();
 }
 
 void RobotControl::OperatorControl()
 {
+	m_compressor->Start();
 	DriverStation::ReportWarning("OperatorControl called");
 	while (IsOperatorControl() && IsEnabled())
 	{
