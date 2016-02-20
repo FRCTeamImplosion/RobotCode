@@ -27,8 +27,8 @@ BallControl::BallControl(JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 
-	m_max_in_speed =  0.4f;
-	m_max_out_speed =  0.75f;
+	m_max_in_speed =  0.6f;
+	m_max_out_speed =  0.95f;
 
 	SmartDashboard::PutNumber("Ball/MaxInSpeed", m_max_in_speed);
 	SmartDashboard::PutNumber("Ball/MaxOutSpeed", m_max_out_speed);
