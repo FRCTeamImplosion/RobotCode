@@ -35,7 +35,7 @@ BallControl::BallControl(JoystickPtr &joystick)
 
 	m_speed = 0.0f;
 
-	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("Talon", "BallMotor", 1, false));
+	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("Talon", "BallMotor", 1, true));
 }
 
 

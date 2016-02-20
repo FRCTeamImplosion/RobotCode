@@ -19,7 +19,7 @@ WinchControl::WinchControl(JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 	m_speed = 0.0f;
-	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "WinchMotor", 4, false));
+	m_motor = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "WinchMotor", 4, true));
 }
 
 WinchControl::~WinchControl()
