@@ -27,8 +27,6 @@ BallControl::BallControl(JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 
-	const char *section = "Ball";
-
 	m_max_in_speed =  0.4f;
 	m_max_out_speed =  0.75f;
 

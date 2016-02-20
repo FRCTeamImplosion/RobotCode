@@ -44,6 +44,8 @@ public:
 
 	float GetAxis(Xbox360Axis axis) const;
 
+	int  GetPOV() const;
+
 	bool IsPressed(Xbox360Button button) const;
 	bool IsDown(Xbox360Button button) const;
 	bool IsUp(Xbox360Button button) const;

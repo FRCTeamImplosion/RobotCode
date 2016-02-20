@@ -103,6 +103,10 @@ void RobotDriveControl::Update(double delta)
 		SmartDashboard::PutNumber("Drive/Shift/Current", m_shift_factor);
 	}
 
+	int pov = m_joystick->GetPOV();
+	SmartDashboard::PutNumber("Drive/POV", pov);
+
+
 	// Handle the stick inputs
 	m_left_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_LEFT) * m_shift_factor;
 	m_right_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_RIGHT) * m_shift_factor;

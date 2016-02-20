@@ -26,6 +26,11 @@ float JoystickReader::GetAxis(Xbox360Axis axis) const
 	return m_stick->GetRawAxis(axis);
 }
 
+int JoystickReader::GetPOV() const
+{
+	return m_stick->GetPOV();
+}
+
 bool JoystickReader::IsPressed(Xbox360Button button) const
 {
 	return ((m_curButtonState & ~m_lastButtonState) & (1 << button)) != 0;
