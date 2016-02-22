@@ -42,7 +42,7 @@ ArmControl::ArmControl(JoystickPtr &joystick)
 	m_current_speed = 0.0f;
 
 	m_left = SolenoidPtr(new Solenoid(1));
-	m_right = SolenoidPtr(new Solenoid(2));
+	m_right = SolenoidPtr(new Solenoid(0));
 	m_left->Set(false);
 	m_right->Set(false);
 
@@ -55,6 +55,32 @@ ArmControl::ArmControl(JoystickPtr &joystick)
 ArmControl::~ArmControl()
 {
 }
+
+void ArmControl::RobotInit()
+{
+	if (m_left)
+		m_left->Set(false);
+	if (m_right)
+		m_right->Set(false);
+}
+
+
+void ArmControl::AutonomousInit()
+{
+	if (m_left)
+		m_left->Set(false);
+	if (m_right)
+		m_right->Set(false);
+}
+
+void ArmControl::TeleopInit()
+{
+	if (m_left)
+		m_left->Set(false);
+	if (m_right)
+		m_right->Set(false);
+}
+
 
 void ArmControl::Update(double delta)
 {
