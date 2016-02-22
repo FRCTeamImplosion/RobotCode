@@ -52,34 +52,31 @@ void RobotControl::Disabled()
 	DriverStation::ReportWarning("Disabled called");
 	for (UpdatablePtr ptr : m_updatables)
 	{
-		ptr->Stop();
+		ptr->Disable();
 	}
-	m_compressor->Stop();
 }
 
 void RobotControl::Autonomous()
 {
-	m_compressor->Start();
 	DriverStation::ReportWarning("Autonomous called");
-	StopAll();
+	DisableAll();
 }
 
 void RobotControl::OperatorControl()
 {
-	m_compressor->Start();
 	DriverStation::ReportWarning("OperatorControl called");
 	while (IsOperatorControl() && IsEnabled())
 	{
 		UpdateAll();
 	}
-	StopAll();
+	DisableAll();
 }
 
-void RobotControl::StopAll()
+void RobotControl::DisableAll()
 {
 	for (UpdatablePtr ptr : m_updatables)
 	{
-		ptr->Stop();
+		ptr->Disable();
 	}
 }
 

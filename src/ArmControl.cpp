@@ -78,7 +78,7 @@ void ArmControl::Update(double delta)
 		if (m_right)
 			m_right->Set(true);
 	}
-	else
+	else if (m_joystick->IsDown(XBOX_360_BUTTON_START))
 	{
 		if (m_left)
 			m_left->Set(false);
@@ -87,7 +87,7 @@ void ArmControl::Update(double delta)
 	}
 }
 
-void ArmControl::Stop()
+void ArmControl::Disable()
 {
 	m_speed = 0.0f;
 	m_current_speed = 0.0f;
@@ -97,6 +97,7 @@ void ArmControl::Stop()
 void ArmControl::SetMotorSpeed()
 {
 	//m_current_speed = MotorControlHelper::LimitReverseAcceleration(m_current_speed, m_speed, m_max_down_acceleration);
+	m_current_speed = m_speed;
 
 	float out = MotorControlHelper::Limit(m_current_speed, -m_max_down_speed, 1.0f);
 

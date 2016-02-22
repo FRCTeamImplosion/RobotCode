@@ -30,16 +30,16 @@ void WinchControl::Update(double delta)
 {
 	// Handle the stick inputs
 	m_speed = 0.0f;
-	if (m_joystick->IsDown(XBOX_360_BUTTON_BACK))
+	if (m_joystick->IsDown(XBOX_360_BUTTON_BACK) || m_joystick->IsDown(XBOX_360_BUTTON_Y))
 		m_speed = -1.0f;
-	if (m_joystick->IsDown(XBOX_360_BUTTON_START))
+	if (m_joystick->IsDown(XBOX_360_BUTTON_START) || m_joystick->IsDown(XBOX_360_BUTTON_A))
 		m_speed = 1.0f;
 
 	// Set the output
 	SetMotorSpeed();
 }
 
-void WinchControl::Stop()
+void WinchControl::Disable()
 {
 	m_speed = 0.0f;
 	SetMotorSpeed();

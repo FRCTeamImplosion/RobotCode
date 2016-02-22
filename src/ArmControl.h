@@ -20,8 +20,9 @@ public:
 	explicit ArmControl(JoystickPtr &joystick);
 	~ArmControl();
 
+	virtual void RobotInit() { }
 	virtual void Update(double delta);
-	virtual void Stop();
+	virtual void Disable();
 
 private:
 	void SetMotorSpeed();

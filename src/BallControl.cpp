@@ -56,7 +56,7 @@ void BallControl::Update(double delta)
 	SetMotorSpeed();
 }
 
-void BallControl::Stop()
+void BallControl::Disable()
 {
 	m_speed = 0.0f;
 	SetMotorSpeed();

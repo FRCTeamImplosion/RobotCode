@@ -51,8 +51,8 @@ RobotDriveControl::RobotDriveControl(JoystickPtr &joystick)
 {
 	m_joystick = joystick;
 
-	m_min_shift = 0.25f;
-	m_max_shift = 0.8f;
+	m_min_shift = 0.35f;
+	m_max_shift = 1.0f;
 	m_max_accel = 0.025f;
 	m_max_decel = 0.05f;
 	m_initial_shift = (m_max_shift - m_min_shift)/2.0f;
@@ -71,9 +71,15 @@ RobotDriveControl::RobotDriveControl(JoystickPtr &joystick)
 	m_motors[RIGHT_BACK_MOTOR] = SpeedControllerPtr(MotorControlHelper::CreateSpeedController("CANTalon", "RightBackMotor", 1, false));  // 3
 
 	m_left_speed_curve[1.0f] = 1.0f;
-	m_right_speed_curve[1.0f] = 1.0f;
 	m_left_speed_curve[-1.0f] = 1.0f;
-	m_right_speed_curve[-1.0f] = 1.0f;
+
+	m_right_speed_curve[-1.0f] = 0.75f;
+	m_right_speed_curve[-0.675f] = 0.75f;
+	m_right_speed_curve[-0.35f] = 0.75f;
+	m_right_speed_curve[0.0f] = 0.75f;
+	m_right_speed_curve[0.35f] = 0.75f;
+	m_right_speed_curve[0.675f] = 0.75f;
+	m_right_speed_curve[1.0f] = 0.75f;
 
 	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
 	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);
@@ -158,7 +164,7 @@ void RobotDriveControl::Update(double delta)
 	SetMotorSpeeds();
 }
 
-void RobotDriveControl::Stop()
+void RobotDriveControl::Disable()
 {
 	m_left_speed = 0.0f;
 	m_right_speed = 0.0f;

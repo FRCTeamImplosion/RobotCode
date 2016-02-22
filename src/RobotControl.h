@@ -19,7 +19,7 @@ public:
 	virtual void Autonomous();
 	virtual void OperatorControl();
 private:
-	void StopAll();
+	void DisableAll();
 	void UpdateAll();
 
 	enum Joysticks

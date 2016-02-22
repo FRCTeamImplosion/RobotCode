@@ -20,7 +20,7 @@ public:
 	~WinchControl();
 
 	virtual void Update(double delta);
-	virtual void Stop();
+	virtual void Disable();
 
 private:
 	void SetMotorSpeed();

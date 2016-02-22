@@ -11,7 +11,10 @@
 
 class Updatable{
 public:
-	virtual void Stop() {}			// When autonomous, teleop, test mode is exited
+	virtual void RobotInit() { }
+	virtual void AutonomousInit() {}
+	virtual void TeleopInit() { }
+	virtual void Disable() {}
 	virtual void Update(double delta) = 0;
 	virtual ~Updatable(){}
 };
