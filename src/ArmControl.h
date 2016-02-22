@@ -20,7 +20,10 @@ public:
 	explicit ArmControl(JoystickPtr &joystick);
 	~ArmControl();
 
-	virtual void RobotInit() { }
+	virtual void RobotInit();
+	virtual void AutonomousInit();
+	virtual void TeleopInit();
+
 	virtual void Update(double delta);
 	virtual void Disable();
 

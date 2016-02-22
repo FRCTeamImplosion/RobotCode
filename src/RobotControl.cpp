@@ -44,6 +44,11 @@ void RobotControl::RobotInit()
 
 	//m_settings.SaveSettingsFile(settings_file_name);
 
+	for (UpdatablePtr ptr : m_updatables)
+	{
+		ptr->RobotInit();
+	}
+
 	DriverStation::ReportWarning("RobotInit called");
 }
 
@@ -58,12 +63,21 @@ void RobotControl::Disabled()
 
 void RobotControl::Autonomous()
 {
+	for (UpdatablePtr ptr : m_updatables)
+	{
+		ptr->AutonomousInit();
+	}
 	DriverStation::ReportWarning("Autonomous called");
 	DisableAll();
 }
 
 void RobotControl::OperatorControl()
 {
+	for (UpdatablePtr ptr : m_updatables)
+	{
+		ptr->TeleopInit();
+	}
+
 	DriverStation::ReportWarning("OperatorControl called");
 	while (IsOperatorControl() && IsEnabled())
 	{
