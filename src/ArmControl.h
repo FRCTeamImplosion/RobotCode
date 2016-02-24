@@ -40,6 +40,7 @@ private:
 
 	float m_max_down_acceleration;
 	float m_max_down_speed;
+	float m_max_up_speed;
 	float m_current_speed;
 	float m_speed;
 };

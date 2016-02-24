@@ -69,11 +69,36 @@ void RobotControl::Autonomous()
 	}
 
 	DriverStation::ReportWarning("Autonomous called");
+
+	for (int shift = 0; shift < 4; shift++)
+	{
+		m_joysticks[DRIVE_STICK]->SetAutonomousButtonState(XBOX_360_BUTTON_L_BUMPER, true);
+		AutonomousWait(0.03);
+		m_joysticks[DRIVE_STICK]->SetAutonomousButtonState(XBOX_360_BUTTON_L_BUMPER, false);
+		AutonomousWait(0.03);
+	}
+	/*
+	for (int shift = 0; shift < 1; shift++)
+	{
+		m_joysticks[DRIVE_STICK]->SetAutonomousButtonState(XBOX_360_BUTTON_R_BUMPER, true);
+		AutonomousWait(0.03);
+		m_joysticks[DRIVE_STICK]->SetAutonomousButtonState(XBOX_360_BUTTON_R_BUMPER, false);
+		AutonomousWait(0.03);
+	}
+	*/
 	m_joysticks[DRIVE_STICK]->SetAutonomousPOV(XBOX_360_POV_DIR_UP);
-	AutonomousWait(1.5);
+	AutonomousWait(3.5);
 
 
 	m_joysticks[DRIVE_STICK]->SetAutonomousPOV(XBOX_360_POV_DIR_NONE);
+	for (int shift = 0; shift < 1; shift++)
+	{
+		m_joysticks[DRIVE_STICK]->SetAutonomousButtonState(XBOX_360_BUTTON_R_BUMPER, true);
+		AutonomousWait(0.03);
+		m_joysticks[DRIVE_STICK]->SetAutonomousButtonState(XBOX_360_BUTTON_R_BUMPER, false);
+		AutonomousWait(0.03);
+	}
+
 	DisableAll();
 }
 

@@ -37,6 +37,7 @@ ArmControl::ArmControl(JoystickPtr &joystick)
 
 	m_max_down_acceleration = 0.015f;
 	m_max_down_speed =  0.25f;
+	m_max_up_speed = 0.75f;
 
 	m_speed = 0.0f;
 	m_current_speed = 0.0f;
@@ -125,7 +126,7 @@ void ArmControl::SetMotorSpeed()
 	//m_current_speed = MotorControlHelper::LimitReverseAcceleration(m_current_speed, m_speed, m_max_down_acceleration);
 	m_current_speed = m_speed;
 
-	float out = MotorControlHelper::Limit(m_current_speed, -m_max_down_speed, 1.0f);
+	float out = MotorControlHelper::Limit(m_current_speed, -m_max_down_speed, m_max_up_speed);
 
 	SmartDashboard::PutNumber("Arm/Speed", m_speed);
 	SmartDashboard::PutNumber("Arm/Current", m_current_speed);
