@@ -5,8 +5,12 @@
 JoystickReader::JoystickReader(int stick)
 {
 	m_stick = JoystickPtr(new Joystick(stick));
+	m_autonomousButtonState = 0;
 	m_curButtonState = 0;
 	m_lastButtonState = 0;
+	m_povDirection = -1;
+	for (int curAxis = 0; curAxis < XBOX_360_NUM_AXIS; curAxis++)
+		m_autonomousAxisState[curAxis] = 0.0f;
 }
 
 void JoystickReader::Update(double)
@@ -14,21 +18,32 @@ void JoystickReader::Update(double)
 	m_lastButtonState = m_curButtonState;
 	m_curButtonState = 0;
 
-	for(int curButton = 1; curButton < XBOX_360_NUM_BUTTONS; curButton++)
+	if (!isAutonomous)
 	{
-		if(m_stick->GetRawButton(curButton))
-			m_curButtonState |= (1 << curButton);
+		for(int curButton = 1; curButton < XBOX_360_NUM_BUTTONS; curButton++)
+		{
+			if(m_stick->GetRawButton(curButton))
+				m_curButtonState |= (1 << curButton);
+		}
+	}
+	else
+	{
+		m_curButtonState = m_autonomousButtonState;
 	}
 }
 
 float JoystickReader::GetAxis(Xbox360Axis axis) const
 {
-	return m_stick->GetRawAxis(axis);
+	if (!isAutonomous)
+		return m_stick->GetRawAxis(axis);
+	return m_autonomousAxisState[axis];
 }
 
 int JoystickReader::GetPOV() const
 {
-	return m_stick->GetPOV();
+	if (!isAutonomous)
+		return m_stick->GetPOV();
+	return m_povDirection;
 }
 
 bool JoystickReader::IsPressed(Xbox360Button button) const

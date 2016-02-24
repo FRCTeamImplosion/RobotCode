@@ -119,39 +119,40 @@ void RobotDriveControl::Update(double delta)
 	m_right_speed = m_joystick->GetAxis(XBOX_360_AXIS_Y_RIGHT) * m_shift_factor;
 
 	int pov = m_joystick->GetPOV();
+
 	SmartDashboard::PutNumber("Drive/POV", pov);
-	if (pov >= 0)
+	if (pov >= XBOX_360_POV_DIR_UP)
 	{
 		switch (pov)
 		{
-		case 0:
+		case XBOX_360_POV_DIR_UP:
 			m_left_speed = m_right_speed = 1.0f;
 			break;
-		case 45:
+		case XBOX_360_POV_DIR_UP_RIGHT:
 			m_left_speed = -1.0f;
 			m_right_speed = 0.0f;
 			break;
-		case 90:
+		case XBOX_360_POV_DIR_RIGHT:
 			m_left_speed = -1.0f;
 			m_right_speed = 1.0f;
 			break;
-		case 135:
+		case XBOX_360_POV_DIR_DOWN_RIGHT:
 			m_left_speed = 0.0f;
 			m_right_speed = 1.0f;
 			break;
-		case 180:
+		case XBOX_360_POV_DIR_DOWN:
 			m_left_speed = 1.0f;
 			m_right_speed = 1.0f;
 			break;
-		case 225:
+		case XBOX_360_POV_DIR_DOWN_LEFT:
 			m_left_speed = 1.0f;
 			m_right_speed = 0.0f;
 			break;
-		case 270:
+		case XBOX_360_POV_DIR_LEFT:
 			m_left_speed = 1.0f;
 			m_right_speed = -1.0f;
 			break;
-		case 315:
+		case XBOX_360_POV_DIR_UP_LEFT:
 			m_left_speed = 0.0f;
 			m_right_speed = -1.0f;
 			break;
