@@ -65,7 +65,7 @@ public:
 
 	void SetAutonomousButtonState(Xbox360Button button, bool isDown);
 	void SetAutonomousAxisValue(Xbox360Axis axis, float value);
-	void SetAutonomousPOV();
+	void SetAutonomousPOV(Xbox360PovDirection direction);
 private:
 	typedef std::shared_ptr<Joystick> JoystickPtr;
 	JoystickPtr m_stick;

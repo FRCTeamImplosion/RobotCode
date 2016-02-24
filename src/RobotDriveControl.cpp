@@ -73,13 +73,13 @@ RobotDriveControl::RobotDriveControl(JoystickPtr &joystick)
 	m_left_speed_curve[1.0f] = 1.0f;
 	m_left_speed_curve[-1.0f] = 1.0f;
 
-	m_right_speed_curve[-1.0f] = 0.75f;
-	m_right_speed_curve[-0.675f] = 0.75f;
-	m_right_speed_curve[-0.35f] = 0.75f;
-	m_right_speed_curve[0.0f] = 0.75f;
-	m_right_speed_curve[0.35f] = 0.75f;
-	m_right_speed_curve[0.675f] = 0.75f;
-	m_right_speed_curve[1.0f] = 0.75f;
+	m_right_speed_curve[-1.0f] = 0.8f;
+	m_right_speed_curve[-0.675f] = 0.8f;
+	m_right_speed_curve[-0.35f] = 0.8f;
+	m_right_speed_curve[0.0f] = 0.8f;
+	m_right_speed_curve[0.35f] = 0.8f;
+	m_right_speed_curve[0.675f] = 0.8f;
+	m_right_speed_curve[1.0f] = 0.8f;
 
 	SmartDashboard::PutNumber("Drive/Shift/Start", m_initial_shift);
 	SmartDashboard::PutNumber("Drive/Shift/Min", m_min_shift);
@@ -126,7 +126,8 @@ void RobotDriveControl::Update(double delta)
 		switch (pov)
 		{
 		case XBOX_360_POV_DIR_UP:
-			m_left_speed = m_right_speed = 1.0f;
+			m_left_speed = -1.0f;
+			m_right_speed = -1.0f;
 			break;
 		case XBOX_360_POV_DIR_UP_RIGHT:
 			m_left_speed = -1.0f;

@@ -19,6 +19,8 @@ public:
 	virtual void Autonomous();
 	virtual void OperatorControl();
 private:
+	void AutonomousWait(double seconds);
+
 	void DisableAll();
 	void UpdateAll();
 

@@ -67,8 +67,24 @@ void RobotControl::Autonomous()
 	{
 		ptr->AutonomousInit();
 	}
+
 	DriverStation::ReportWarning("Autonomous called");
+	m_joysticks[DRIVE_STICK]->SetAutonomousPOV(XBOX_360_POV_DIR_UP);
+	AutonomousWait(1.5);
+
+
+	m_joysticks[DRIVE_STICK]->SetAutonomousPOV(XBOX_360_POV_DIR_NONE);
 	DisableAll();
+}
+
+void RobotControl::AutonomousWait(double seconds)
+{
+	Timer autonomousTimer;
+	autonomousTimer.Start();
+	while (IsAutonomous() && IsEnabled() && autonomousTimer.Get() < seconds)
+	{
+		UpdateAll();
+	}
 }
 
 void RobotControl::OperatorControl()
